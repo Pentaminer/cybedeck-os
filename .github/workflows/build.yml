@@ -1,0 +1,40 @@
+name: Build Cyberdeck OS
+
+on:
+  workflow_dispatch: # Кнопка ручного запуска в браузере
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential libncurses5-dev libssl-dev texinfo unzip bc rsync cpio
+
+    - name: Download Buildroot
+      run: |
+        wget https://buildroot.org/downloads/buildroot-2026.02.tar.gz
+        tar -xzf buildroot-2026.02.tar.gz
+        mv buildroot-2026.02 buildroot
+
+    - name: Configure with Custom Cyberdeck Defconfig
+      run: |
+        cp cyberdeck_defconfig build/configs/cyberdeck_defconfig
+        cd build
+        make cyberdeck_defconfig
+
+    - name: Compile OS
+      run: |
+        cd build
+        make
+
+    - name: Upload Finished Image
+      uses: actions/upload-artifact@v4
+      with:
+        name: cyberdeck-os-image
+        path: build/output/images/
