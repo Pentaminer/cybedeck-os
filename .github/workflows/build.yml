@@ -24,10 +24,11 @@ jobs:
 
     - name: Configure with Custom Cyberdeck Defconfig
       run: |
-        cp cyberdeck_defconfig build/configs/cyberdeck_defconfig
+        # Копируем конфиг из корня репозитория прямо в дефолтные конфиги Buildroot
+        cp ${{ github.workspace }}/cyberdeck_defconfig build/configs/cyberdeck_defconfig
         cd build
         make cyberdeck_defconfig
-
+        
     - name: Compile OS
       run: |
         cd build
