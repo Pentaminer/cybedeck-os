@@ -26,13 +26,8 @@ jobs:
       run: |
         cd buildroot
         
-        # Шаг 1: Используем точное имя дефолтного конфига под QEMU ARM VExpress
-        make qemu_arm_vexpress_defconfig
-        
-        # Шаг 2: Дописываем наши кастомные опции (Lua, Графика, Терминал) в конец .config
-        cat << 'EOF' >> .config
-        
-        # --- CYBERDECK CUSTOM EXTENSIONS ---
+        # Шаг 1: Создаем временный чистый файлик только с нашими пакетами
+        cat << 'EOF' > my_packages.config
         BR2_PACKAGE_LUA=y
         BR2_PACKAGE_LUA_5_4=y
         BR2_PACKAGE_LUASOCKET=y
@@ -42,7 +37,6 @@ jobs:
         BR2_PACKAGE_NANO=y
         BR2_PACKAGE_XORG7=y
         BR2_PACKAGE_XSERVER_XORG_SERVER=y
-        BR2_PACKAGE_XSERVER_XORG_SERVER_MODULAR=y
         BR2_PACKAGE_XDRIVER_XF86_VIDEO_FBDEV=y
         BR2_PACKAGE_XDRIVER_XF86_INPUT_KEYBOARD=y
         BR2_PACKAGE_XDRIVER_XF86_INPUT_MOUSE=y
@@ -52,7 +46,11 @@ jobs:
         BR2_PACKAGE_XINIT=y
         EOF
         
-        # Шаг 3: Проверяем и обновляем получившийся конфиг
+        # Шаг 2: Натравливаем официальный скрипт Buildroot для безопасного объединения
+        # Он сам выкинет всё устаревшее и включит только то, что валидно для версии 2026.02
+        support/kconfig/merge_config.sh -m configs/qemu_arm_vexpress_defconfig my_packages.config
+        
+        # Шаг 3: Финально утрясаем зависимости, чтобы Buildroot был доволен
         make olddefconfig
         
     - name: Compile OS
