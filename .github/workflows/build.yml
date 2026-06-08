@@ -31,8 +31,8 @@ jobs:
     - name: Compile OS
       run: |
         cd buildroot
-        # Флаг --keep-going заставит компилятор выдать максимум инфы, если что-то не так
-        make --keep-going
+        # Собираем строго в 2 потока, чтобы уложиться в 7 ГБ лимит памяти GitHub Actions
+        make -j2 --keep-going
 
     - name: Upload Finished Image
       if: always() # Пакет попытается загрузиться в любом случае, чтобы мы видели файлы
