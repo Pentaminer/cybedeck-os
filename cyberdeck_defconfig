@@ -1,53 +1,41 @@
-# Àðõèòåêòóðà è Ïðîöåññîð (Cortex-A7)
+# Архитектура платы QEMU ARM VExpress (Cortex-A7)
 BR2_arm=y
 BR2_cortex_a7=y
 BR2_ARM_EABIHF=y
 BR2_ARM_FPU_VFPV3D16=y
 
-# Áàçîâàÿ ñèñòåìà è Òóë÷åéí
+# Включаем критически важные системные опции (без них графика заблокирована)
+BR2_TOOLCHAIN_BUILDROOT_WCHAR=y
+BR2_ENABLE_LOCALE=y
 BR2_TOOLCHAIN_BUILDROOT_GLIBC=y
-BR2_KERNEL_HEADERS_6_18=y
-BR2_GCC_VERSION_14_X=y
 
-# ßäðî Linux (Áàçîâûé êîíôèã ïîä âèðòóàëüíóþ ïëàòó vexpress)
+# Линукс Ядро (Берем стабильную версию и конфиг vexpress)
 BR2_LINUX_KERNEL=y
 BR2_LINUX_KERNEL_CUSTOM_VERSION=y
 BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="6.18.7"
 BR2_LINUX_KERNEL_DEFCONFIG="vexpress"
 BR2_LINUX_KERNEL_ZIMAGE=y
 
-# Èíòåðïðåòàòîð Lua 5.4 è âàæíûå ìîäóëè
+# Пакеты: Скрипты и Утилиты
 BR2_PACKAGE_LUA=y
 BR2_PACKAGE_LUA_5_4=y
 BR2_PACKAGE_LUASOCKET=y
 BR2_PACKAGE_LUAFILESYSTEM=y
-
-# Ïàêåòíûé ìåíåäæåð OPKG (Àëüòåðíàòèâà APT)
 BR2_PACKAGE_OPKG=y
-
-# Óäîáíûå óòèëèòû äëÿ òåðìèíàëà
 BR2_PACKAGE_TMUX=y
 BR2_PACKAGE_NANO=y
 
-# Ãðàôè÷åñêèé ñåðâåð X.Org (X11)
+# Графический стек X11 (Строго актуальный синтаксис 2026.02)
 BR2_PACKAGE_XORG7=y
 BR2_PACKAGE_XSERVER_XORG_SERVER=y
-BR2_PACKAGE_XSERVER_XORG_SERVER_MODULAR=y
-
-# Âèäåîäðàéâåð è ââîä (Ìûøü + Êëàâà äëÿ QEMU)
 BR2_PACKAGE_XDRIVER_XF86_VIDEO_FBDEV=y
-BR2_PACKAGE_XDRIVER_XF86_INPUT_KEYBOARD=y
-BR2_PACKAGE_XDRIVER_XF86_INPUT_MOUSE=y
 BR2_PACKAGE_XDRIVER_XF86_INPUT_EVDEV=y
 
-# Ãðàôè÷åñêàÿ îáîëî÷êà (Ëåãêîâåñíûé Îêîííûé Ìåíåäæåð)
+# Интерфейс и Терминал
 BR2_PACKAGE_OPENBOX=y
-
-# Óòèëèòû ãðàôèêè (Ýìóëÿòîð òåðìèíàëà xterm)
 BR2_PACKAGE_XTERM=y
 BR2_PACKAGE_XINIT=y
 
-# Ôîðìàò ôàéëîâîé ñèñòåìû íà âûõîäå
+# Таргет файловой системы
 BR2_TARGET_ROOTFS_EXT2=y
 BR2_TARGET_ROOTFS_EXT2_4=y
-# BR2_TARGET_ROOTFS_TAR is not set
