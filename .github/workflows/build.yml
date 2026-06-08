@@ -31,8 +31,12 @@ jobs:
     - name: Compile OS
       run: |
         cd buildroot
-        # Собираем строго в 2 потока, чтобы уложиться в 7 ГБ лимит памяти GitHub Actions
-        make -j2 --keep-going
+        # Чистим старый конфиг и директорию ядра
+        make linux-dirclean || true
+        # Накатываем наш дефконфиг заново, чтобы применились новые настройки ядра
+        make cyberdeck_defconfig
+        # Погнали собирать
+        make -j2
 
     - name: Upload Finished Image
       if: always() # Пакет попытается загрузиться в любом случае, чтобы мы видели файлы
