@@ -1,7 +1,7 @@
 name: Build Cyberdeck OS
 
 on:
-  workflow_dispatch: # Кнопка ручного запуска в браузере
+  workflow_dispatch:
 
 jobs:
   build:
@@ -24,46 +24,12 @@ jobs:
 
     - name: Configure with Custom Cyberdeck Defconfig
       run: |
+        # Копируем наш чистый, выверенный конфиг в папку Buildroot
+        cp ${{ github.workspace }}/cyberdeck_defconfig buildroot/configs/cyberdeck_defconfig
         cd buildroot
-        
-        # 1. Загружаем чистый базовый конфиг платы QEMU VExpress
-        make qemu_arm_vexpress_defconfig
-        
-        # 2. Принудительно включаем поддержку wchar, локалей и динамических библиотек в тулчейне
-        # Без этого X.Org и графические библиотеки вообще аппаратно заблокированы в Buildroot
-        sed -i 's/# BR2_TOOLCHAIN_BUILDROOT_WCHAR is not set/BR2_TOOLCHAIN_BUILDROOT_WCHAR=y/' .config
-        sed -i 's/# BR2_ENABLE_LOCALE is not set/BR2_ENABLE_LOCALE=y/' .config
-        
-        # 3. Вшиваем наши современные пакеты со всеми их родительскими зависимостями
-        cat << 'EOF' >> .config
-        
-        # Кастомная начинка Cyberdeck
-        BR2_PACKAGE_LUA=y
-        BR2_PACKAGE_LUA_5_4=y
-        BR2_PACKAGE_LUASOCKET=y
-        BR2_PACKAGE_LUAFILESYSTEM=y
-        BR2_PACKAGE_OPKG=y
-        BR2_PACKAGE_TMUX=y
-        BR2_PACKAGE_NANO=y
-        
-        # Включаем графическую подсистему X11 и зависимости
-        BR2_PACKAGE_XORG7=y
-        BR2_PACKAGE_XSERVER_XORG_SERVER=y
-        BR2_PACKAGE_XSERVER_XORG_SERVER_MODULAR=y
-        BR2_PACKAGE_XDRIVER_XF86_VIDEO_FBDEV=y
-        BR2_PACKAGE_XDRIVER_XF86_INPUT_KEYBOARD=y
-        BR2_PACKAGE_XDRIVER_XF86_INPUT_MOUSE=y
-        BR2_PACKAGE_XDRIVER_XF86_INPUT_EVDEV=y
-        
-        # Оконный менеджер и терминал
-        BR2_PACKAGE_OPENBOX=y
-        BR2_PACKAGE_XTERM=y
-        BR2_PACKAGE_XINIT=y
-        EOF
-        
-        # 4. Даем Buildroot команду «переварить» конфиг и автоматически расставить всё остальное
-        make olddefconfig
-        
+        # Заставляем применить именно его
+        make cyberdeck_defconfig
+
     - name: Compile OS
       run: |
         cd buildroot
