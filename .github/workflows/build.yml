@@ -24,18 +24,18 @@ jobs:
 
     - name: Configure with Custom Cyberdeck Defconfig
       run: |
-        # Копируем наш чистый, выверенный конфиг в папку Buildroot
         cp ${{ github.workspace }}/cyberdeck_defconfig buildroot/configs/cyberdeck_defconfig
         cd buildroot
-        # Заставляем применить именно его
         make cyberdeck_defconfig
 
     - name: Compile OS
       run: |
         cd buildroot
-        make
+        # Флаг --keep-going заставит компилятор выдать максимум инфы, если что-то не так
+        make --keep-going
 
     - name: Upload Finished Image
+      if: always() # Пакет попытается загрузиться в любом случае, чтобы мы видели файлы
       uses: actions/upload-artifact@v4
       with:
         name: cyberdeck-os-image
