@@ -24,14 +24,35 @@ jobs:
 
     - name: Configure with Custom Cyberdeck Defconfig
       run: |
-        # Копируем наш конфиг в папку Buildroot
-        cp ${{ github.workspace }}/cyberdeck_defconfig buildroot/configs/cyberdeck_defconfig
         cd buildroot
         
-        # Применяем конфиг
-        make cyberdeck_defconfig
+        # Шаг 1: Генерируем абсолютно чистый базовый конфиг под плату vexpress
+        make vexpress_defconfig
         
-        # Заставляем Buildroot автоматически обновить старые параметры до актуальных
+        # Шаг 2: Грубо и прямолинейно дописываем наши кастомные опции в конец созданного файла .config
+        cat << EOF >> .config
+        
+        # --- CYBERDECK CUSTOM EXTENSIONS ---
+        BR2_PACKAGE_LUA=y
+        BR2_PACKAGE_LUA_5_4=y
+        BR2_PACKAGE_LUASOCKET=y
+        BR2_PACKAGE_LUAFILESYSTEM=y
+        BR2_PACKAGE_OPKG=y
+        BR2_PACKAGE_TMUX=y
+        BR2_PACKAGE_NANO=y
+        BR2_PACKAGE_XORG7=y
+        BR2_PACKAGE_XSERVER_XORG_SERVER=y
+        BR2_PACKAGE_XSERVER_XORG_SERVER_MODULAR=y
+        BR2_PACKAGE_XDRIVER_XF86_VIDEO_FBDEV=y
+        BR2_PACKAGE_XDRIVER_XF86_INPUT_KEYBOARD=y
+        BR2_PACKAGE_XDRIVER_XF86_INPUT_MOUSE=y
+        BR2_PACKAGE_XDRIVER_XF86_INPUT_EVDEV=y
+        BR2_PACKAGE_OPENBOX=y
+        BR2_PACKAGE_XTERM=y
+        BR2_PACKAGE_XINIT=y
+        EOF
+        
+        # Шаг 3: Заставляем Buildroot переварить, исправить и утвердить получившийся файл
         make olddefconfig
         
     - name: Compile OS
