@@ -26,11 +26,11 @@ jobs:
       run: |
         cd buildroot
         
-        # Шаг 1: Генерируем абсолютно чистый базовый конфиг под плату vexpress
-        make vexpress_defconfig
+        # Шаг 1: Используем точное имя дефолтного конфига под QEMU ARM VExpress
+        make qemu_arm_vexpress_defconfig
         
-        # Шаг 2: Грубо и прямолинейно дописываем наши кастомные опции в конец созданного файла .config
-        cat << EOF >> .config
+        # Шаг 2: Дописываем наши кастомные опции (Lua, Графика, Терминал) в конец .config
+        cat << 'EOF' >> .config
         
         # --- CYBERDECK CUSTOM EXTENSIONS ---
         BR2_PACKAGE_LUA=y
@@ -52,7 +52,7 @@ jobs:
         BR2_PACKAGE_XINIT=y
         EOF
         
-        # Шаг 3: Заставляем Buildroot переварить, исправить и утвердить получившийся файл
+        # Шаг 3: Проверяем и обновляем получившийся конфиг
         make olddefconfig
         
     - name: Compile OS
