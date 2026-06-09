@@ -36,7 +36,18 @@ BR2_PACKAGE_OPENBOX=y
 BR2_PACKAGE_XTERM=y
 BR2_PACKAGE_XINIT=y
 
-# Таргет файловой системы
+# =====================================================================
+# ФИКСЫ ГРАФИКИ (SVG, Темы и Контекст)
+# =====================================================================
+BR2_PACKAGE_GDK_PIXBUF=y
+BR2_PACKAGE_GDK_PIXBUF_XLIB=y
+BR2_PACKAGE_LIBRSVG=y
+BR2_PACKAGE_SHARED_MIME_INFO=y
+BR2_PACKAGE_HICOLOR_ICON_THEME=y
+BR2_PACKAGE_DEJAVU=y
+# =====================================================================
+
+# Таргет файловой системы (Компактный размер для быстрого скачивания)
 BR2_TARGET_ROOTFS_EXT2=y
 BR2_TARGET_ROOTFS_EXT2_4=y
 BR2_TARGET_ROOTFS_EXT2_SIZE="256M"
