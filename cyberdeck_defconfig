@@ -1,6 +1,6 @@
-# Архитектура платы QEMU ARM VExpress (Cortex-A7)
+# Архитектура платы QEMU ARM VExpress (Cortex-A9)
 BR2_arm=y
-BR2_cortex_a7=y
+BR2_cortex_a9=y
 BR2_ARM_EABIHF=y
 BR2_ARM_FPU_VFPV3D16=y
 
